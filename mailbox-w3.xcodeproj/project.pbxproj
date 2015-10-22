@@ -14,6 +14,7 @@
 		18D08AD61BD5107A00177F46 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 18D08AD41BD5107A00177F46 /* LaunchScreen.storyboard */; };
 		18D08AE11BD5107A00177F46 /* mailbox_w3Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18D08AE01BD5107A00177F46 /* mailbox_w3Tests.swift */; };
 		18D08AEC1BD5107A00177F46 /* mailbox_w3UITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18D08AEB1BD5107A00177F46 /* mailbox_w3UITests.swift */; };
+		18D08AFA1BD511B800177F46 /* MailboxViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18D08AF91BD511B800177F46 /* MailboxViewController.swift */; settings = {ASSET_TAGS = (); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -47,6 +48,7 @@
 		18D08AE71BD5107A00177F46 /* mailbox-w3UITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "mailbox-w3UITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		18D08AEB1BD5107A00177F46 /* mailbox_w3UITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = mailbox_w3UITests.swift; sourceTree = "<group>"; };
 		18D08AED1BD5107A00177F46 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		18D08AF91BD511B800177F46 /* MailboxViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MailboxViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -97,8 +99,8 @@
 		18D08ACA1BD5107A00177F46 /* mailbox-w3 */ = {
 			isa = PBXGroup;
 			children = (
+				18D08AFC1BD5208100177F46 /* View Controllers */,
 				18D08ACB1BD5107A00177F46 /* AppDelegate.swift */,
-				18D08ACD1BD5107A00177F46 /* ViewController.swift */,
 				18D08ACF1BD5107A00177F46 /* Main.storyboard */,
 				18D08AD21BD5107A00177F46 /* Assets.xcassets */,
 				18D08AD41BD5107A00177F46 /* LaunchScreen.storyboard */,
@@ -123,6 +125,15 @@
 				18D08AED1BD5107A00177F46 /* Info.plist */,
 			);
 			path = "mailbox-w3UITests";
+			sourceTree = "<group>";
+		};
+		18D08AFC1BD5208100177F46 /* View Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				18D08AF91BD511B800177F46 /* MailboxViewController.swift */,
+				18D08ACD1BD5107A00177F46 /* ViewController.swift */,
+			);
+			name = "View Controllers";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -260,6 +271,7 @@
 			files = (
 				18D08ACE1BD5107A00177F46 /* ViewController.swift in Sources */,
 				18D08ACC1BD5107A00177F46 /* AppDelegate.swift in Sources */,
+				18D08AFA1BD511B800177F46 /* MailboxViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
