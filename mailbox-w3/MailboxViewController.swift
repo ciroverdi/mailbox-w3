@@ -19,20 +19,18 @@ class MailboxViewController: UIViewController, UIGestureRecognizerDelegate, UISc
     @IBOutlet weak var messageView: UIImageView!
 
     @IBOutlet weak var dragLeft: UIView!
-    @IBOutlet weak var laterIcon: UIImageView!
     @IBOutlet weak var listIcon: UIImageView!
+    @IBOutlet weak var laterIcon: UIImageView!
     @IBOutlet weak var deleteIcon: UIImageView!
     @IBOutlet weak var archiveIcon: UIImageView!
     
     @IBOutlet weak var dragRight: UIView!
     
-    @IBOutlet var listEdge: UIScreenEdgePanGestureRecognizer!
-    
     @IBOutlet weak var listView: UIImageView!
-    
     @IBOutlet weak var rescheduleView: UIImageView!
     
     var initialMessage: CGPoint!
+    var currentPoint: CGPoint!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -41,12 +39,16 @@ class MailboxViewController: UIViewController, UIGestureRecognizerDelegate, UISc
         archiveIcon.hidden = true
         laterIcon.hidden = true
         listIcon.hidden = true
+        
+        listView.alpha = 0
+        rescheduleView.alpha = 0
 
         feedScrollView.delegate = self
         feedScrollView.contentSize = feedView.image!.size
         
         panGesture = UIPanGestureRecognizer(target: self, action: "onPan:")
         view.addGestureRecognizer(panGesture)
+        
     }
 
     override func didReceiveMemoryWarning() {
@@ -62,70 +64,119 @@ class MailboxViewController: UIViewController, UIGestureRecognizerDelegate, UISc
         )
     }
     
-    func changeMessageBackgroundColor() {
+    func changeBackgroundColor() {
         dragLeft.hidden = true
         dragRight.hidden = true
 
         let position = messageView.frame.origin.x
-
-        if (position > 0 && position <= 240) {
-            print("background is green")
+        print("position: \(position)")
+        
+        if (position > 0 && position <= 60) {
+            print("left background is grey")
             dragRight.hidden = false
-            dragRight.backgroundColor = UIColorFromRGB(0x006400)
+            dragRight.backgroundColor = UIColorFromRGB(0xC0C0C0)
             archiveIcon.hidden = false
+            archiveIcon.alpha = 0.5
             deleteIcon.hidden = true
             archiveIcon.frame.origin.x = position - 40
             
-        } else if (position > 240) {
-            print("background is red")
+        } else if (position > 60 && position <= 230) {
+            print("left background is green")
+            dragRight.hidden = false
+            dragRight.backgroundColor = UIColorFromRGB(0x006400)
+            archiveIcon.hidden = false
+            archiveIcon.alpha = 1.0
+            deleteIcon.hidden = true
+            archiveIcon.frame.origin.x = position - 40
+            
+        } else if (position > 230) {
+            print("left background is red")
             dragRight.hidden = false
             dragRight.backgroundColor = UIColorFromRGB(0x8B0000)
             archiveIcon.hidden = true
             deleteIcon.hidden = false
             deleteIcon.frame.origin.x = position - 40
             
-        } else {
-            print("background is yellow")
+        } else if (position < 0 && position > -60) {
+            print("right background is grey")
+            dragRight.hidden = true
+            dragLeft.hidden = false
+            dragLeft.backgroundColor = UIColorFromRGB(0xC0C0C0)
+            dragLeft.alpha = 1.0
+            laterIcon.hidden = false
+            laterIcon.alpha = 0.5
+            laterIcon.frame.origin.x = currentPoint.x + 40
+            listIcon.hidden = true
+
+        } else if (position < -60 && position > -240) {
+            print("right background is yellow")
+            print("is later")
+            dragRight.hidden = true
             dragLeft.hidden = false
             dragLeft.backgroundColor = UIColorFromRGB(0xFFD700)
+            dragLeft.alpha = 1.0
             laterIcon.hidden = false
-            if (position <= -240) {
-                print("is list")
-                listIcon.hidden = false
-                listIcon.frame.origin.x = position + 40
-                laterIcon.hidden = true
-            } else {
-                print("is later")
-                laterIcon.hidden = false
-                laterIcon.frame.origin.x = position + 40
-                listIcon.hidden = true
-            }
-            print("position: \(position)")
-            print("list: \(listIcon.frame.origin.x)")
-            print("later: \(laterIcon.frame.origin.x)")
-            
+            laterIcon.alpha = 1.0
+            laterIcon.frame.origin.x = currentPoint.x + 40
+            listIcon.hidden = true
+        } else {
+            print("right background is yellow")
+            print("is list")
+            dragRight.hidden = true
+            dragLeft.hidden = false
+            dragLeft.backgroundColor = UIColorFromRGB(0xFFD700)
+            dragLeft.alpha = 0.5
+            listIcon.hidden = false
+            listIcon.alpha = 1.0
+            listIcon.frame.origin.x = currentPoint.x + 40
+            laterIcon.hidden = true
         }
+    }
+    
+    func rescheduleOrList() {
+        let position = messageView.frame.origin.x
+        
+        if (position <= -230) {
+            listView.alpha = 1
+            rescheduleView.alpha = 0
+            print("listView is true")
+        } else if (position < -50) {
+            listView.alpha = 0
+            rescheduleView.alpha = 1
+            print("rescheduleView is true")
+        }
+
     }
 
     @IBAction func onPan(sender: UIPanGestureRecognizer) {
-        let point = sender.locationInView(view)
+        currentPoint = sender.locationInView(view)
         let translation = sender.translationInView(view)
 
         if panGesture.state == UIGestureRecognizerState.Began {
-            print("Gesture point began at: \(point)")
-
+            print("Gesture point began at: \(currentPoint)")
             initialMessage = messageView.frame.origin
-            changeMessageBackgroundColor()
+            changeBackgroundColor()
 
         } else if panGesture.state == UIGestureRecognizerState.Changed {
-            print("Gesture point changed at: \(point)")
+            print("Gesture point changed at: \(currentPoint)")
             messageView.frame.origin.x = CGFloat(initialMessage.x + translation.x)
-            changeMessageBackgroundColor()
+            changeBackgroundColor()
         
         } else if panGesture.state == UIGestureRecognizerState.Ended {
-            print("Gesture point ended at: \(point)")
-            changeMessageBackgroundColor()
-            
+            print("Gesture point ended at: \(currentPoint)")
+            changeBackgroundColor()
+            UIView.animateWithDuration(0.5, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 0, options: [], animations: { () -> Void in
+                    self.rescheduleOrList()
+                    self.messageView.frame.origin.x = 0
+                }, completion: nil)
         }
+    }
+
+    @IBAction func onTap(sender: UITapGestureRecognizer) {
+        print("onTap")
+        UIView.animateWithDuration(0.5, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 0, options: [], animations: { () -> Void in
+            self.listView.alpha = 0
+            self.rescheduleView.alpha = 0
+        }, completion: nil)
     }
 }
