@@ -49,6 +49,10 @@ class MailboxViewController: UIViewController, UIGestureRecognizerDelegate, UISc
         panGesture = UIPanGestureRecognizer(target: self, action: "onPan:")
         view.addGestureRecognizer(panGesture)
         
+        let edgeGesture = UIScreenEdgePanGestureRecognizer(target: self, action: "onEdgePan:")
+        view.userInteractionEnabled = true
+        edgeGesture.edges = UIRectEdge.Left
+        view.addGestureRecognizer(edgeGesture)
     }
 
     override func didReceiveMemoryWarning() {
@@ -178,5 +182,9 @@ class MailboxViewController: UIViewController, UIGestureRecognizerDelegate, UISc
             self.listView.alpha = 0
             self.rescheduleView.alpha = 0
         }, completion: nil)
+    }
+    
+    @IBAction func onEdgePan(sender: UIScreenEdgePanGestureRecognizer) {
+        print("onEdgePan")
     }
 }
